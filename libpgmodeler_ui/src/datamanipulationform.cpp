@@ -1383,7 +1383,7 @@ QString DataManipulationForm::getDMLCommand(int row)
 	QString tab_name=QString("\"%1\".\"%2\"").arg(schema_cmb->currentText()).arg(table_cmb->currentText()),
 			upd_cmd=QString("UPDATE %1 SET %2 WHERE %3"),
 			del_cmd=QString("DELETE FROM %1 WHERE %2"),
-			ins_cmd=QString("INSERT INTO %1(%2) VALUES (%3)"),
+			ins_cmd=QString("INSERT INTO %1(%2) OVERRIDING SYSTEM VALUE VALUES (%3)"),
 			fmt_cmd;
 	QTableWidgetItem *item=nullptr;
 	unsigned op_type=results_tbw->verticalHeaderItem(row)->data(Qt::UserRole).toUInt();
@@ -1459,10 +1459,16 @@ QString DataManipulationForm::getDMLCommand(int row)
 					//Quoting value
 					else
 					{
-						value.replace(QString("\\") + PgModelerNs::UnescValueStart, PgModelerNs::UnescValueStart);
-						value.replace(QString("\\") + PgModelerNs::UnescValueEnd, PgModelerNs::UnescValueEnd);
-						value.replace("\'","''");
-						value=QString("E'") + value + QString("'");
+						// quick hack to make it stop escaping 'NULL' and instead insert it as null value
+						if (value.startsWith("NULL")) {
+							// (treat it like empty value)
+							value=QString("DEFAULT");
+						} else {
+							value.replace(QString("\\") + PgModelerNs::UnescValueStart, PgModelerNs::UnescValueStart);
+							value.replace(QString("\\") + PgModelerNs::UnescValueEnd, PgModelerNs::UnescValueEnd);
+							value.replace("\'","''");
+							value=QString("E'") + value + QString("'");
+						}	
 					}
 
 					if(op_type==OpInsert)

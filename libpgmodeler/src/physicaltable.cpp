@@ -1643,7 +1643,7 @@ QString PhysicalTable::getInitialDataCommands(void)
 
 QString PhysicalTable::createInsertCommand(const QStringList &col_names, const QStringList &values)
 {
-	QString fmt_cmd, insert_cmd = QString("INSERT INTO %1 (%2) VALUES (%3);\n%4");
+	QString fmt_cmd, insert_cmd = QString("INSERT INTO %1 (%2) OVERRIDING SYSTEM VALUE VALUES (%3);\n%4");
 	QStringList val_list, col_list;
 	int curr_col=0;
 
@@ -1666,11 +1666,17 @@ QString PhysicalTable::createInsertCommand(const QStringList &col_names, const Q
 		//Quoting value
 		else
 		{
-			value.replace(QString("\\") + PgModelerNs::UnescValueStart, PgModelerNs::UnescValueStart);
-			value.replace(QString("\\") + PgModelerNs::UnescValueEnd, PgModelerNs::UnescValueEnd);
-			value.replace(QString("\'"), QString("''"));
-			value.replace(QChar(QChar::LineFeed), QString("\\n"));
-			value=QString("E'") + value + QString("'");
+			// quick hack to make it stop escaping 'NULL' and instead insert it as null value
+			if (value.startsWith("NULL")) {
+				// (treat it like empty value)
+				value=QString("DEFAULT");
+			} else {
+				value.replace(QString("\\") + PgModelerNs::UnescValueStart, PgModelerNs::UnescValueStart);
+				value.replace(QString("\\") + PgModelerNs::UnescValueEnd, PgModelerNs::UnescValueEnd);
+				value.replace(QString("\'"), QString("''"));
+				value.replace(QChar(QChar::LineFeed), QString("\\n"));
+				value=QString("E'") + value + QString("'");
+			}	
 		}
 
 		val_list.push_back(value);
