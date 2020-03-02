@@ -19,7 +19,7 @@ Thank you Raphael, for providing this powerful and well designed piece of softwa
 Change Log
 ----------
 
-2020-02-03
+2020-03-02
 
 - Changed libpgmodeler/src/physical_table.cpp and libpgmodeler_ui/src/datamanipulationform.cpp to
   create INSERTs with OVERRIDING SYSTEM VALUE
