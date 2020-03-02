@@ -21,6 +21,6 @@ Change Log
 
 2020-02-03
 
-    - Changed libpgmodeler/src/physical_table.cpp and libpgmodeler_ui/src/datamanipulationform.cpp to
-      create INSERTs with OVERRIDING SYSTEM VALUE
-    - Changed libpgmodeler/src/physical_table.cpp and libpgmodeler_ui/src/datamanipulationform.cpp to convert NULL in imported CSV rows to the column default value or null value when inserting. 
+- Changed libpgmodeler/src/physical_table.cpp and libpgmodeler_ui/src/datamanipulationform.cpp to
+  create INSERTs with OVERRIDING SYSTEM VALUE
+- Changed libpgmodeler/src/physical_table.cpp and libpgmodeler_ui/src/datamanipulationform.cpp to convert NULL in imported CSV rows to the column default value or null value when inserting. 
